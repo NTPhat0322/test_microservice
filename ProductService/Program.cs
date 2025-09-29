@@ -14,19 +14,25 @@
 //    }
 //}
 
+using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using ProductService.Entities;
+using ProductService.Repositories;
 using ProductService.Services;
 
+// cài đặt thư viện DotNetEnv: dotnet add package DotNetEnv
+// Tải biến môi trường từ file .env
+Env.Load(); // Đọc file .env và nạp vào biến môi trường
 var builder = WebApplication.CreateBuilder(args);
+
+//DI
+//builder.Services.AddScoped<ProductGrpcService>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 //===========Database Configuration===========
 var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
 
-builder.Services.AddDbContext<DemoMicroContext>(options =>
-{
-    options.UseNpgsql(connectionString);
-});
+builder.Services.AddDbContext<DemoMicroContext>();
 
 // gRPC
 builder.Services.AddGrpc();
