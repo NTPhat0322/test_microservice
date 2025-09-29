@@ -1,0 +1,18 @@
+services:
+  productservice:
+    build:
+      context: .
+      dockerfile: ProductService/Dockerfile
+    ports:
+      - "5001:8080"
+
+  apigateway:
+    build:
+      context: .
+      dockerfile: ApiGateway/Dockerfile
+    ports:
+      - "5000:8080"
+    environment:
+      GrpcEndpoints__ProductService: http://productservice:5001
+    depends_on:
+      - productservice
