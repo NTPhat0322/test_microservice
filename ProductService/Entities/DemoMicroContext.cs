@@ -19,12 +19,12 @@ public partial class DemoMicroContext : DbContext
 
 
     //---------
-    private string GetConnectionString()
-    {
-        return Environment.GetEnvironmentVariable("DATABASE_URL");
-    }
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql(GetConnectionString());
+    //private string GetConnectionString()
+    //{
+    //    return Environment.GetEnvironmentVariable("DATABASE_URL");
+    //}
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //    => optionsBuilder.UseNpgsql(GetConnectionString());
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

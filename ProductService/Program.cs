@@ -1,19 +1,3 @@
-//namespace ProductService
-//{
-//    public class Program
-//    {
-//        public static void Main(string[] args)
-//        {
-//            var builder = WebApplication.CreateBuilder(args);
-//            var app = builder.Build();
-
-//            app.MapGet("/", () => "Hello World!");
-
-//            app.Run();
-//        }
-//    }
-//}
-
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using ProductService.Entities;
@@ -30,9 +14,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 //===========Database Configuration===========
-var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
-builder.Services.AddDbContext<DemoMicroContext>();
+//builder.Services.AddDbContext<DemoMicroContext>();
+builder.Services.AddDbContext<DemoMicroContext>(options =>
+               options.UseNpgsql(connectionString));
 
 // gRPC
 builder.Services.AddGrpc();

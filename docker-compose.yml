@@ -1,10 +1,29 @@
 services:
   productservice:
+    container_name: productservice
     build:
       context: .
       dockerfile: ProductService/Dockerfile
     ports:
       - "5001:8080"
+    env_file:
+      - ProductService/.env
+    depends_on:
+      - product_db
+  
+  product_db:
+    image: postgres:15
+    container_name: product_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Tienphat123
+      POSTGRES_DB: demo_micro
+    ports:
+      - "5440:5432"
+    volumes:
+      - product_db_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
 
   apigateway:
     build:
@@ -16,3 +35,5 @@ services:
       GrpcEndpoints__ProductService: http://productservice:5001
     depends_on:
       - productservice
+volumes:
+    product_db_data:
