@@ -9,21 +9,46 @@ services:
     env_file:
       - ProductService/.env
     depends_on:
-      - product_db
+      product_db:
+        condition: service_healthy
+    # healthcheck:
+    #   test: ["CMD-SHELL", "curl -f http://productservice:8080/health || exit 1"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+    #   start_period: 10s
+    # healthcheck:
+    #   test: ["CMD-SHELL", "curl -f http://productservice:5001/health || exit 1"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+    #   start_period: 10s
+    networks:
+      - micro_net
   
   product_db:
     image: postgres:15
     container_name: product_db
     restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Tienphat123
-      POSTGRES_DB: demo_micro
+    env_file:
+      - ProductService/.env
+    # environment:
+    #   POSTGRES_USER: postgres
+    #   POSTGRES_PASSWORD: Tienphat123
+    #   POSTGRES_DB: demo_micro
     ports:
       - "5440:5432"
     volumes:
       - product_db_data:/var/lib/postgresql/data
       - ./db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U postgres -d demo_micro || exit 1"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+        start_period: 10s
+    networks:
+      - micro_net
 
   apigateway:
     build:
@@ -35,5 +60,14 @@ services:
       GrpcEndpoints__ProductService: http://productservice:5001
     depends_on:
       - productservice
+      # productservice:
+      #   condition: service_healthy
+    networks:
+      - micro_net
+
 volumes:
-    product_db_data:
+  product_db_data:
+    
+networks:
+  micro_net:
+    driver: bridge
