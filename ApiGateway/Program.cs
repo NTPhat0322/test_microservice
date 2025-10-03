@@ -1,47 +1,10 @@
-
-//namespace ApiGateway
-//{
-//    public class Program
-//    {
-//        public static void Main(string[] args)
-//        {
-//            var builder = WebApplication.CreateBuilder(args);
-
-//            // Add services to the container.
-
-//            builder.Services.AddControllers();
-//            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-//            builder.Services.AddEndpointsApiExplorer();
-//            builder.Services.AddSwaggerGen();
-
-//            var app = builder.Build();
-
-//            // Configure the HTTP request pipeline.
-//            if (app.Environment.IsDevelopment())
-//            {
-//                app.UseSwagger();
-//                app.UseSwaggerUI();
-//            }
-
-//            app.UseHttpsRedirection();
-
-//            app.UseAuthorization();
-
-
-//            app.MapControllers();
-
-//            app.Run();
-//        }
-//    }
-//}
-
-
+using DotNetEnv;
 using Grpc.Net.ClientFactory;
 using Polly;
 using Polly.Extensions.Http;
 using Shared.Protos;
 
-
+Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 
 // Swagger cho client
@@ -49,10 +12,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // gRPC clients via factory + resilience
+var productServiceAddress = Environment.GetEnvironmentVariable("GRPCENDPOINTS__PRODUCTSERVICE");
+//var productServiceAddress = Environment.GetEnvironmentVariable("GRPCENDPOINTS_PRODUCTSERVICE");
 builder.Services
     .AddGrpcClient<Shared.Protos.ProductService.ProductServiceClient>("ProductService", o =>
     {
-        o.Address = new Uri(builder.Configuration["GrpcEndpoints:ProductService"]!);
+        //o.Address = new Uri(builder.Configuration["GrpcEndpoints:ProductService"]!);
+        o.Address = new Uri(productServiceAddress);
     })
     .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
     {
