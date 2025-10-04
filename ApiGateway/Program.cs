@@ -15,14 +15,14 @@ builder.Services.AddSwaggerGen();
 var productServiceAddress = Environment.GetEnvironmentVariable("GRPCENDPOINTS__PRODUCTSERVICE");
 //var productServiceAddress = Environment.GetEnvironmentVariable("GRPCENDPOINTS_PRODUCTSERVICE");
 builder.Services
-    .AddGrpcClient<Shared.Protos.ProductService.ProductServiceClient>("ProductService", o =>
+    .AddGrpcClient<Shared.Protos.ProductService.ProductServiceClient>(/*"ProductService",*/ o =>
     {
         //o.Address = new Uri(builder.Configuration["GrpcEndpoints:ProductService"]!);
         o.Address = new Uri(productServiceAddress);
-    })
-    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-    {
     });
+    //.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    //{
+    //});
     //.AddPolicyHandler(HttpPolicyExtensions
     //    .HandleTransientHttpError()
     //    .OrResult(msg => (int)msg.StatusCode == 429)
@@ -38,19 +38,21 @@ app.UseSwaggerUI();
 
 app.MapHealthChecks("/health");
 
-app.MapGet("/api/products", async (IHttpClientFactory httpClientFactory,
-                                   GrpcClientFactory grpcFactory) =>
-{
-    var client = grpcFactory.CreateClient<Shared.Protos.ProductService.ProductServiceClient>("ProductService");
-    var reply = await client.GetProductsAsync(new EmptyRequest());
-    return Results.Ok(reply.Items);
-});
+//app.MapGet("/api/products", async (IHttpClientFactory httpClientFactory,
+//                                   GrpcClientFactory grpcFactory) =>
+//{
+//    var client = grpcFactory.CreateClient<Shared.Protos.ProductService.ProductServiceClient>("ProductService");
+//    var reply = await client.GetProductsAsync(new EmptyRequest());
+//    return Results.Ok(reply.Items);
+//});
 
-app.MapGet("/api/products/{id}", async (string id, GrpcClientFactory grpcFactory) =>
-{
-    var client = grpcFactory.CreateClient<Shared.Protos.ProductService.ProductServiceClient>("ProductService");
-    var reply = await client.GetByIdAsync(new ProductIdRequest { Id = id });
-    return Results.Ok(reply);
-});
+//app.MapGet("/api/products/{id}", async (string id, GrpcClientFactory grpcFactory) =>
+//{
+//    var client = grpcFactory.CreateClient<Shared.Protos.ProductService.ProductServiceClient>("ProductService");
+//    var reply = await client.GetByIdAsync(new ProductIdRequest { Id = id });
+//    return Results.Ok(reply);
+//});
+
+app.MapControllers(); //controller routing
 
 app.Run();

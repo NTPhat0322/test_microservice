@@ -10,6 +10,11 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="3.1.1" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.72.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -26,17 +31,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="API\GRPC\" />
-    <Folder Include="Application\Interfaces\" />
+	<Protobuf Include="Shared\Protos\order.proto" GrpcServices="Both" ProtoRoot="Shared\Protos" />
+	<Protobuf Include="Shared\Protos\product.proto" GrpcServices="Client" ProtoRoot="Shared\Protos"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Application\Handlers\" />
-    <Folder Include="Application\Services\" />
     <Folder Include="Domain\Entities\" />
-    <Folder Include="Domain\Repositories\" />
     <Folder Include="Infrastructure\Data\" />
     <Folder Include="Infrastructure\EventBus\" />
     <Folder Include="Infrastructure\ExternalServices\" />
-    <Folder Include="Infrastructure\Repositories\" />
-    <Folder Include="Shared\Protos\" />
     <Folder Include="Tests\" />
   </ItemGroup>
 
