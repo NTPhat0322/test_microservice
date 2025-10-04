@@ -1,5 +1,6 @@
 using DotNetEnv;
 using Grpc.Net.ClientFactory;
+using OrderGrpc.Protos;
 using Polly;
 using Polly.Extensions.Http;
 using Shared.Protos;
@@ -13,20 +14,26 @@ builder.Services.AddSwaggerGen();
 
 // gRPC clients via factory + resilience
 var productServiceAddress = Environment.GetEnvironmentVariable("GRPCENDPOINTS__PRODUCTSERVICE");
+var orderServiceAddress = Environment.GetEnvironmentVariable("GRPCENDPOINTS__ORDERSERVICE");
 //var productServiceAddress = Environment.GetEnvironmentVariable("GRPCENDPOINTS_PRODUCTSERVICE");
 builder.Services
     .AddGrpcClient<Shared.Protos.ProductService.ProductServiceClient>(/*"ProductService",*/ o =>
     {
         //o.Address = new Uri(builder.Configuration["GrpcEndpoints:ProductService"]!);
-        o.Address = new Uri(productServiceAddress);
+        o.Address = new Uri(productServiceAddress!);
     });
-    //.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-    //{
-    //});
-    //.AddPolicyHandler(HttpPolicyExtensions
-    //    .HandleTransientHttpError()
-    //    .OrResult(msg => (int)msg.StatusCode == 429)
-    //    .WaitAndRetryAsync(3, attempt => TimeSpan.FromMilliseconds(200 * attempt)));
+//.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+//{
+//});
+//.AddPolicyHandler(HttpPolicyExtensions
+//    .HandleTransientHttpError()
+//    .OrResult(msg => (int)msg.StatusCode == 429)
+//    .WaitAndRetryAsync(3, attempt => TimeSpan.FromMilliseconds(200 * attempt)));
+
+
+builder.Services.AddGrpcClient<OrderService.OrderServiceClient>(o => { 
+    o.Address = new Uri(orderServiceAddress!);
+});
 
 builder.Services.AddControllers();
 builder.Services.AddHealthChecks();

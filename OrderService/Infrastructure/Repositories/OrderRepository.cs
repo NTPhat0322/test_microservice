@@ -10,6 +10,7 @@ namespace OrderService.Infrastructure.Repositories
         public async Task AddOrderAsync(Order order)
         {
             await dbContext.Orders.AddAsync(order);
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task<List<Order>> GetAllOrdersAsync() => await dbContext.Orders.ToListAsync();
