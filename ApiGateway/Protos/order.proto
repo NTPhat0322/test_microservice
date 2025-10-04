@@ -1,0 +1,35 @@
+﻿syntax = "proto3";
+
+//option csharp_namespace = "Shared.Protos";
+option csharp_namespace = "OrderGrpc.Protos";
+
+package order;
+
+service OrderService {
+  rpc GetOrders(EmptyRequest) returns (OrderList);
+  rpc GetById(OrderIdRequest) returns (OrderDto);
+  rpc CreateOrder(OrderInfo) returns (BoolReply);
+}
+
+//message
+message EmptyRequest {}
+message OrderIdRequest {
+	string id = 1;
+}
+message OrderInfo {
+	string productId = 1;
+	int32 quantity = 2;
+}
+message OrderDto {
+	string orderId = 1;
+	string productId = 2;
+	int32 quantity = 3;
+	int64 price_cents = 4;
+}
+message OrderList {
+	repeated OrderDto items = 1;
+}
+message BoolReply {
+	bool success = 1;
+}
+
