@@ -27,7 +27,7 @@ namespace ProductService.Services
 
         public override async Task<ProductDto> GetById(ProductIdRequest request, ServerCallContext context)
         {
-            Product found = await productRepository.getById(Guid.Parse(request.Id));
+            var found = await productRepository.getById(Guid.Parse(request.Id));
             if (found is null) throw new RpcException(new Status(StatusCode.NotFound, "Product not found"));
             ProductDto result = new()
             {

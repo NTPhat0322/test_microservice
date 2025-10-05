@@ -18,7 +18,7 @@ namespace OrderService.API.GRPC
                     OrderId = order.Id.ToString(),
                     Quantity = order.Quantity,
                     ProductId = order.ProductId.ToString(),
-                    PriceCents = (long)(order.TotalPrice * 100m)
+                    PriceCents = (long)(order.TotalPrice)
                 }); 
             }
             return result;
