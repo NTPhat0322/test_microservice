@@ -1,0 +1,36 @@
+﻿syntax = "proto3";
+option csharp_namespace = "UserGrpc.Protos";
+
+package user;
+
+service UserService {
+	rpc GetUsers(EmptyRequest) returns (UserList);
+	rpc GetById(UserIdRequest) returns (UserDto);
+	rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+}
+
+message EmptyRequest {}
+
+message UserDto {
+	string userId = 1;
+	string email = 2;
+}
+
+message UserList {
+	repeated UserDto userList = 1;
+}
+
+message UserIdRequest {
+	string id = 1;
+}
+
+message CreateUserRequest {
+	string email = 1;
+	string password = 2;
+}
+
+message CreateUserResponse {
+	string email = 1;
+	string userId = 2;
+	string token = 3;
+}
