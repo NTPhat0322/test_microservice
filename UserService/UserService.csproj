@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>2d9f6c40-85ae-4cac-95aa-f04b62a9b0bb</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="API\" />
+		<Folder Include="Infrustructure\" />
+		<Folder Include="Domain\" />
+		<Folder Include="Tests\" />
+		<Folder Include="Shared\" />
+	</ItemGroup>
+</Project>

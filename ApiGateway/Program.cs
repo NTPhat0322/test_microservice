@@ -1,8 +1,6 @@
+using ApiGateway.Middleware;
 using DotNetEnv;
-using Grpc.Net.ClientFactory;
 using OrderGrpc.Protos;
-using Polly;
-using Polly.Extensions.Http;
 using Shared.Protos;
 
 Env.Load();
@@ -12,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// gRPC clients via factory + resilience
+// gRPC clients
 var productServiceAddress = Environment.GetEnvironmentVariable("GRPCENDPOINTS__PRODUCTSERVICE");
 var orderServiceAddress = Environment.GetEnvironmentVariable("GRPCENDPOINTS__ORDERSERVICE");
 //var productServiceAddress = Environment.GetEnvironmentVariable("GRPCENDPOINTS_PRODUCTSERVICE");
@@ -40,10 +38,24 @@ builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+//pipeline
+app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<RequestLoggingMiddleware>();
+
+//pipeline
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.MapHealthChecks("/health");
+app.MapControllers(); //controller routing
+app.Run();
+
+
+
 
 //app.MapGet("/api/products", async (IHttpClientFactory httpClientFactory,
 //                                   GrpcClientFactory grpcFactory) =>
@@ -59,7 +71,3 @@ app.MapHealthChecks("/health");
 //    var reply = await client.GetByIdAsync(new ProductIdRequest { Id = id });
 //    return Results.Ok(reply);
 //});
-
-app.MapControllers(); //controller routing
-
-app.Run();
