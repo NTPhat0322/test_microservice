@@ -7,6 +7,7 @@ service UserService {
 	rpc GetUsers(EmptyRequest) returns (UserList);
 	rpc GetById(UserIdRequest) returns (UserDto);
 	rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+	rpc Login(LoginRequest) returns (LoginResponse);
 }
 
 message EmptyRequest {}
@@ -33,4 +34,13 @@ message CreateUserResponse {
 	string email = 1;
 	string userId = 2;
 	string token = 3;
+}
+
+message LoginRequest {
+	string email = 1;
+	string password = 2;
+}
+
+message LoginResponse {
+	string token = 1;
 }

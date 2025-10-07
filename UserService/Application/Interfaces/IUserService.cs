@@ -8,5 +8,6 @@ namespace UserService.Application.Interfaces
         Task<List<User>> GetAllUserAsync();
         Task<User?> GetUserByIdAsync(Guid id);
         Task<RegisterUserResponseDTO> RegisterUserAsync(RegisterUserRequestDTO request);
+        Task<string> Login(LoginRequestDTO request);
     }
 }

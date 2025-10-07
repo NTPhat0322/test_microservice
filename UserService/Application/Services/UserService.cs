@@ -19,6 +19,21 @@ namespace UserService.Application.Services
             return await userRepository.GetById(id);
         }
 
+        public async Task<string> Login(LoginRequestDTO request)
+        {
+            //check if email exists
+            var user = await userRepository.GetByEmail(request.Email);
+            if (user is null)
+                throw new KeyNotFoundException("User has not been registered yet");
+            //check if password is correct
+            var isPasswordValid = PasswordHasher.VerifyPassword(request.Password, user.PasswordHash);
+            if(!isPasswordValid)
+                throw new UnauthorizedAccessException("Password is incorrect");
+            //generate token
+            var token = "coming soon";
+            return token;
+        }
+
         public async Task<RegisterUserResponseDTO> RegisterUserAsync(RegisterUserRequestDTO request)
         {
             //check if email already exists
@@ -46,5 +61,6 @@ namespace UserService.Application.Services
                 throw new Exception("Storing user to db is failed");
             }
         }
+    
     }
 }
