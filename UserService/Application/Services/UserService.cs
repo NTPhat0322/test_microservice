@@ -30,7 +30,7 @@ namespace UserService.Application.Services
             if(!isPasswordValid)
                 throw new UnauthorizedAccessException("Password is incorrect");
             //generate token
-            var token = "coming soon";
+            var token = JwtHelper.CreateToken(user);
             return token;
         }
 
