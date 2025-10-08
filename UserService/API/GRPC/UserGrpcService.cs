@@ -35,7 +35,6 @@ namespace UserService.API.GRPC
                 Email = user.Email,
             };
         }
-
         public override async Task<CreateUserResponse> CreateUser(CreateUserRequest request, ServerCallContext context)
         {
             RegisterUserRequestDTO dto = new()
@@ -51,5 +50,19 @@ namespace UserService.API.GRPC
                 Token = result.Token
             };
         }
+        public override async Task<LoginResponse> Login(LoginRequest request, ServerCallContext context)
+        {
+            LoginRequestDTO dto = new()
+            {
+                Email = request.Email,
+                Password = request.Password
+            };
+            var token = await userService.Login(dto);
+            return new LoginResponse()
+            {
+                Token = token
+            };
+        }
+
     }
 }

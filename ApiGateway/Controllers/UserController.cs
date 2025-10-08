@@ -26,5 +26,11 @@ namespace ApiGateway.Controllers
             var result = await userServiceClient.CreateUserAsync(createUserRequest);
             return Ok(result);
         }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        {
+            var result = await userServiceClient.LoginAsync(request);
+            return Ok(result);
+        }
     }
 }
