@@ -1,10 +1,12 @@
 ﻿using Grpc.Core;
-using OrderService.Application.Interfaces;
+using MassTransit;
 using OrderGrpc.Protos;
+using OrderService.Application.Interfaces;
+using OrderService.Shared.EventContracts;
 
 namespace OrderService.API.GRPC
 {
-    public class OrderGrpcService(IOrderService orderService) : OrderGrpc.Protos.OrderService.OrderServiceBase
+    public class OrderGrpcService(IOrderService orderService, IPublishEndpoint publishEndpoint) : OrderGrpc.Protos.OrderService.OrderServiceBase
     {
         public override async Task<OrderList> GetOrders(EmptyRequest request, ServerCallContext context)
         {
@@ -19,7 +21,7 @@ namespace OrderService.API.GRPC
                     Quantity = order.Quantity,
                     ProductId = order.ProductId.ToString(),
                     PriceCents = (long)(order.TotalPrice)
-                }); 
+                });
             }
             return result;
         }
@@ -28,7 +30,7 @@ namespace OrderService.API.GRPC
             Guid orderId = Guid.Parse(request.Id);
             var order = await orderService.GetOrderByIdAsync(orderId);
             OrderDto orderDto = new();
-            if(order is not null)
+            if (order is not null)
             {
                 orderDto.OrderId = order.Id.ToString();
                 orderDto.Quantity = order.Quantity;
@@ -40,6 +42,14 @@ namespace OrderService.API.GRPC
         public override async Task<BoolReply> CreateOrder(OrderInfo request, ServerCallContext context)
         {
             var result = await orderService.CreateOrderAsync(Guid.Parse(request.ProductId), request.Quantity);
+            if (result)
+            {
+                //pubish event to message broker
+                await publishEndpoint.Publish(new OrderCreatedEvent
+                {
+                    Msg = "Da nhan duoc event tu OrderService"
+                });
+            }
             BoolReply rs = new()
             {
                 Success = result

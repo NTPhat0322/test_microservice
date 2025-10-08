@@ -1,4 +1,5 @@
 using DotNetEnv;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using ProductService.Entities;
 using ProductService.Repositories;
@@ -25,6 +26,22 @@ builder.Services.AddGrpc();
 
 // Health checks
 builder.Services.AddHealthChecks();
+
+//MassTransit with RabbitMQ
+builder.Services.AddMassTransit(busConfigurator => {
+    busConfigurator.SetKebabCaseEndpointNameFormatter();
+
+    busConfigurator.AddConsumer<OrderCreatedConsumer>();
+
+    busConfigurator.UsingRabbitMq((context, configurator) => {
+        configurator.Host(new Uri(Environment.GetEnvironmentVariable("MESSAGE_BROKER_HOST")!), h => {
+            h.Username(Environment.GetEnvironmentVariable("MESSAGE_BROKER_USERNAME")!);
+            h.Password(Environment.GetEnvironmentVariable("MESSAGE_BROKER_PASSWORD")!);
+        });
+
+        configurator.ConfigureEndpoints(context);
+    });
+});
 
 var app = builder.Build();
 

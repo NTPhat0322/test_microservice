@@ -102,10 +102,24 @@ services:
       #   condition: service_healthy
     networks:
       - micro_net
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672" #Cổng chính để ứng dụng ASP.NET Core kết nối
+      - "15672:15672"  #Cổng giao diện quản lý (RabbitMQ Management UI)
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq  # Lưu dữ liệu persist (queue, exchange, etc.)
+    networks:
+      - micro_net
 
 volumes:
   product_db_data:
   order_db_data:
+  rabbitmq_data:
     
 networks:
   micro_net:
