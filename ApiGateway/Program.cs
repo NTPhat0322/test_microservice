@@ -1,5 +1,6 @@
 using ApiGateway.Middleware;
 using DotNetEnv;
+using InventoryGrpc.Protos;
 using OrderGrpc.Protos;
 using Shared.Protos;
 using UserGrpc.Protos;
@@ -15,6 +16,7 @@ builder.Services.AddSwaggerGen();
 var productServiceAddress = Environment.GetEnvironmentVariable("GRPCENDPOINTS__PRODUCTSERVICE");
 var orderServiceAddress = Environment.GetEnvironmentVariable("GRPCENDPOINTS__ORDERSERVICE");
 var userServiceAddress = Environment.GetEnvironmentVariable("GRPCENDPOINTS__USERSERVICE");
+var inventoryServiceAddress = Environment.GetEnvironmentVariable("GRPCENDPOINTS__INVENTORYSERVICE");
 //var productServiceAddress = Environment.GetEnvironmentVariable("GRPCENDPOINTS_PRODUCTSERVICE");
 builder.Services
     .AddGrpcClient<Shared.Protos.ProductService.ProductServiceClient>(/*"ProductService",*/ o =>
@@ -37,6 +39,10 @@ builder.Services.AddGrpcClient<OrderService.OrderServiceClient>(o => {
 builder.Services.AddGrpcClient<UserService.UserServiceClient>(o =>
 {
     o.Address = new Uri(userServiceAddress!);
+});
+builder.Services.AddGrpcClient<InventoryService.InventoryServiceClient>(o =>
+{
+    o.Address = new Uri(inventoryServiceAddress!);
 });
 
 builder.Services.AddControllers();

@@ -11,6 +11,8 @@ services:
     depends_on:
       product_db:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     # healthcheck:
     #   test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
     #   interval: 10s
@@ -37,6 +39,8 @@ services:
       - OrderService/.env
     depends_on:
       order_db:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
     networks:
        - micro_net
@@ -94,20 +98,37 @@ services:
     env_file:
       - ApiGateway/.env
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      - ASPNETCORE_ENVIRONMENT=Development
     # environment:
     #   GrpcEndpoints__ProductService: http://productservice:5001
     depends_on:
       - productservice
       - orderservice
-      # productservice:
-      #   condition: service_healthy
+    networks:
+      - micro_net
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672" #Cổng chính để ứng dụng ASP.NET Core kết nối
+      - "15672:15672"  #Cổng giao diện quản lý (RabbitMQ Management UI)
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq  # Lưu dữ liệu persist (queue, exchange, etc.)
     networks:
       - micro_net
 
 volumes:
   product_db_data:
   order_db_data:
+  rabbitmq_data:
     
 networks:
   micro_net:

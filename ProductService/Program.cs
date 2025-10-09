@@ -1,4 +1,5 @@
 using DotNetEnv;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using ProductService.Entities;
 using ProductService.Repositories;
@@ -25,6 +26,7 @@ builder.Services.AddGrpc();
 
 // Health checks
 builder.Services.AddHealthChecks();
+
 
 var app = builder.Build();
 
