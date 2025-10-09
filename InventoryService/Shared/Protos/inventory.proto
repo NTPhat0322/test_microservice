@@ -1,0 +1,19 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "InventoryGrpc.Protos";
+
+package inventory;
+
+service InventoryService {
+  rpc CreateInventory(CreateRequest) returns (BoolReply);
+}
+
+//message
+message CreateRequest {
+	string productId = 1;
+	int32 quantityInStock = 2;
+}
+
+message BoolReply {
+	bool success = 1;
+}

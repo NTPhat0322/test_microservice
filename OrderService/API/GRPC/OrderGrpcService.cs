@@ -47,7 +47,8 @@ namespace OrderService.API.GRPC
                 //pubish event to message broker
                 await publishEndpoint.Publish(new OrderCreatedEvent
                 {
-                    Msg = "Da nhan duoc event tu OrderService"
+                    ProductId = Guid.Parse(request.ProductId),
+                    Quantity = request.Quantity
                 });
             }
             BoolReply rs = new()

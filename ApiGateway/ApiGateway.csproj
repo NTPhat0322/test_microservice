@@ -27,6 +27,7 @@
 	  <Protobuf Include="Protos\order.proto" GrpcServices="Client" ProtoRoot="Protos" />
 	  <Protobuf Include="Protos\product.proto" GrpcServices="Client" ProtoRoot="Protos" />
 	  <Protobuf Include="Protos\user.proto" GrpcServices="Client" ProtoRoot="Protos" />
+	  <Protobuf Include="Protos\inventory.proto" GrpcServices="Client" ProtoRoot="Protos" />
   </ItemGroup>
 
   <ItemGroup>

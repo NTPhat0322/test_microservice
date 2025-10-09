@@ -1,4 +1,4 @@
-﻿namespace OrderService.Shared.EventContracts
+﻿namespace InventoryService.Shared.EventContracts
 {
     public record OrderCreatedEvent
     {
