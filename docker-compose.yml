@@ -44,6 +44,40 @@ services:
         condition: service_healthy
     networks:
        - micro_net
+  
+  userservice:
+    container_name: userservice
+    build:
+      context: .
+      dockerfile: UserService/Dockerfile
+    ports:
+      - "5003:8080"
+    env_file:
+      - UserService/.env
+    depends_on:
+      user_db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - micro_net
+
+  inventoryservice:
+    container_name: inventoryservice
+    build:
+      context: .
+      dockerfile: InventoryService/Dockerfile
+    ports:
+      - "5004:8080"
+    env_file:
+      - InventoryService/.env
+    depends_on:
+      inventory_db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - micro_net
 
   order_db:
     image: postgres:15
@@ -57,7 +91,7 @@ services:
       - order_db_data:/var/lib/postgresql/data
       - ./db/order:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d demo_micro || exit 1"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d order_service_db || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -89,6 +123,46 @@ services:
     networks:
       - micro_net
 
+  user_db:
+    image: postgres:15
+    container_name: user_db
+    restart: always
+    env_file:
+      - UserService/.env
+    ports:
+      - "5402:5432"
+    volumes:
+      - user_db_data:/var/lib/postgresql/data
+      - ./db/user:/docker-entrypoint-initdb.d
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U postgres -d user_service_db || exit 1"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+        start_period: 10s
+    networks:
+      - micro_net
+
+  inventory_db:
+    image: postgres:15
+    container_name: inventory_db
+    restart: always
+    env_file:
+      - InventoryService/.env
+    ports:
+      - "5403:5432"
+    volumes:
+      - inventory_db_data:/var/lib/postgresql/data
+      - ./db/inventory:/docker-entrypoint-initdb.d
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U postgres -d inventory_service_db || exit 1"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+        start_period: 10s
+    networks:
+      - micro_net
+
   apigateway:
     build:
       context: .
@@ -104,8 +178,11 @@ services:
     depends_on:
       - productservice
       - orderservice
+      - userservice
+      - inventoryservice
     networks:
       - micro_net
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -129,6 +206,8 @@ volumes:
   product_db_data:
   order_db_data:
   rabbitmq_data:
+  user_db_data:
+  inventory_db_data:
     
 networks:
   micro_net:
