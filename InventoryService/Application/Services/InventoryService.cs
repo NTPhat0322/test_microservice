@@ -1,10 +1,10 @@
 ﻿using InventoryService.Application.Interfaces;
 using InventoryService.Domain.Entities;
-using InventoryService.Infrastructure.Repositories;
+using InventoryService.Domain.Repositories;
 
 namespace InventoryService.Application.Services
 {
-    public class InventoryService(InventoryRepository inventoryRepository) : IInventoryService
+    public class InventoryService(IInventoryRepository inventoryRepository) : IInventoryService
     {
         public async Task<bool> AddInventoryAsync(Inventory inventory)
         {
