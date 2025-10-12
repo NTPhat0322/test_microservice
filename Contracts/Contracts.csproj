@@ -1,9 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<!-- Thông tin hiển thị trên NuGet -->
+		<PackageId>TPNuget.Contracts</PackageId>
+		<Version>1.0.0</Version>
+		<Authors>TienPhat</Authors>
+		<Company>TienPhat</Company>
+		<Description>Shared event contracts for microservices communication</Description>
+
+		<!-- Xuất bản package -->
+		<!-- <GeneratePackageOnBuild>true</GeneratePackageOnBuild> -->
+		<PackageOutputPath>../nupkgs</PackageOutputPath>
+
+		<!-- Optional: hiển thị thêm -->
+		<RepositoryUrl>https://github.com/NTPhat0322/test_microservice</RepositoryUrl>
+		<PackageTags>MassTransit;Contracts;Microservices</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
 
 </Project>

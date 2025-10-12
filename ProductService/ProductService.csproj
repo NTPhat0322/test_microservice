@@ -30,6 +30,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.9" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageReference Include="TPNuget.Contracts" Version="1.0.0" />
 
 	<Protobuf Include="Protos\product.proto" GrpcServices="Server" ProtoRoot="Protos" />
   </ItemGroup>
