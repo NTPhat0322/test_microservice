@@ -1,8 +1,8 @@
-﻿using Grpc.Core;
+﻿using Contracts;
+using Grpc.Core;
 using MassTransit;
 using OrderGrpc.Protos;
 using OrderService.Application.Interfaces;
-using OrderService.Shared.EventContracts;
 
 namespace OrderService.API.GRPC
 {

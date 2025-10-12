@@ -43,7 +43,12 @@
     <Folder Include="Infrastructure\Data\" />
     <Folder Include="Infrastructure\EventBus\" />
     <Folder Include="Infrastructure\ExternalServices\" />
+    <Folder Include="Shared\EventContracts\" />
     <Folder Include="Tests\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Contracts\Contracts.csproj" />
   </ItemGroup>
 
 </Project>
