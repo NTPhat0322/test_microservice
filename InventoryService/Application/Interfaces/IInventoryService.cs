@@ -8,5 +8,6 @@ namespace InventoryService.Application.Interfaces
         Task<Inventory?> GetInventoryByIdAsync(Guid id);
         Task<Inventory?> GetInventoryByProductIdAsync(Guid id);
         Task<bool> UpdateInventory(Inventory inventory);
+        Task<List<Inventory>> GetAllInventoriesAsync();
     }
 }

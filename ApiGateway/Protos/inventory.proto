@@ -6,6 +6,7 @@ package inventory;
 
 service InventoryService {
   rpc CreateInventory(CreateRequest) returns (BoolReply);
+  rpc GetAllInventory(EmptyRequest) returns (InventoryList);
 }
 
 //message
@@ -16,4 +17,16 @@ message CreateRequest {
 
 message BoolReply {
 	bool success = 1;
+}
+
+message EmptyRequest {}
+
+message InventoryDto {
+	string id = 1;
+	string productId = 2;
+	int32 quantityInStock = 3;
+}
+
+message InventoryList {
+	repeated InventoryDto items = 1;
 }

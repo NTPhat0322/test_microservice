@@ -11,6 +11,11 @@ namespace InventoryService.Application.Services
             return await inventoryRepository.AddInventory(inventory);
         }
 
+        public async Task<List<Inventory>> GetAllInventoriesAsync()
+        {
+            return await inventoryRepository.GetAll();
+        }
+
         public async Task<Inventory?> GetInventoryByIdAsync(Guid id)
         {
             return await inventoryRepository.GetById(id);
