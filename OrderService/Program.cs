@@ -37,13 +37,17 @@ builder.Services.AddHealthChecks();
 builder.Services.AddMassTransit(busConfigurator => {
     busConfigurator.SetKebabCaseEndpointNameFormatter();
 
-    busConfigurator.UsingRabbitMq((context, configurator) => {
-        configurator.Host(new Uri(Environment.GetEnvironmentVariable("MESSAGE_BROKER_HOST")!), h => {
-            h.Username(Environment.GetEnvironmentVariable("MESSAGE_BROKER_USERNAME")!);
-            h.Password(Environment.GetEnvironmentVariable("MESSAGE_BROKER_PASSWORD")!);
+    busConfigurator.UsingRabbitMq((context, configurator) => 
+    {
+        var host = Environment.GetEnvironmentVariable("MESSAGE_BROKER_HOST");
+        var vHost = Environment.GetEnvironmentVariable("MESSAGE_BROKER_VHOST");
+        var username = Environment.GetEnvironmentVariable("MESSAGE_BROKER_USERNAME");
+        var password = Environment.GetEnvironmentVariable("MESSAGE_BROKER_PASSWORD");
+        configurator.Host(host, vHost, h => 
+        {
+            h.Username(username!);
+            h.Password(password!);
         });
-
-        configurator.ConfigureEndpoints(context);
     });
 });
 

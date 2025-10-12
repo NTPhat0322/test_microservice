@@ -17,5 +17,20 @@ namespace InventoryService.API.Grpc
             var rs = await inventoryService.AddInventoryAsync(inventory);
             return new BoolReply { Success = rs };
         }
+
+        public override async Task<InventoryList> GetAllInventory(EmptyRequest request, ServerCallContext context)
+        {
+            var inventories = await inventoryService.GetAllInventoriesAsync();
+            var inventoryList = new InventoryList();
+            foreach (var item in inventories)
+            {
+                inventoryList.Items.Add(new InventoryDto() { 
+                    Id = item.Id.ToString(),
+                    ProductId = item.ProductId.ToString(),
+                    QuantityInStock = item.QuantityInStock
+                });
+            }
+            return inventoryList;
+        }
     }
 }

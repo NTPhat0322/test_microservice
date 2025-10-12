@@ -16,9 +16,9 @@ namespace InventoryService.Infrastructure.Repositories
             return false;
         }
 
-        public Task<List<Inventory>> GetAll()
+        public async Task<List<Inventory>> GetAll()
         {
-            throw new NotImplementedException();
+            return await context.Inventories.ToListAsync();
         }
 
         public async Task<Inventory?> GetById(Guid id)
@@ -31,9 +31,12 @@ namespace InventoryService.Infrastructure.Repositories
             return await context.Inventories.FirstOrDefaultAsync(i => i.ProductId == id);
         }
 
-        public Task<bool> UpdateInventory(Inventory inventory)
+        public async Task<bool> UpdateInventory(Inventory inventory)
         {
-            throw new NotImplementedException();
+            context.Inventories.Update(inventory);
+            int rs = await context.SaveChangesAsync();
+            if(rs > 0) return true;
+            return false;
         }
     }
 }
