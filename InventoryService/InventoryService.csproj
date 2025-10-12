@@ -40,6 +40,11 @@
 	<ItemGroup>
 		<Folder Include="Domain\Entities\" />
 		<Folder Include="Infrastructure\Data\" />
+		<Folder Include="Shared\EventContracts\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Contracts\Contracts.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<Protobuf Include="Shared\Protos\inventory.proto" GrpcServices="Server" ProtoRoot="Shared\Protos" />

@@ -1,6 +1,5 @@
-﻿using InventoryService.Application.Interfaces;
-using InventoryService.Domain.Entities;
-using InventoryService.Shared.EventContracts;
+﻿using Contracts;
+using InventoryService.Application.Interfaces;
 using MassTransit;
 
 namespace InventoryService.API.EventHandler
