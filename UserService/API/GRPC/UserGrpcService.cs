@@ -43,6 +43,10 @@ namespace UserService.API.GRPC
                 Password = request.Password
             };
             var result = await userService.RegisterUserAsync(dto);
+            if (result is null)
+            {
+                throw new Exception("Create user failed");
+            }
             return new CreateUserResponse()
             {
                 Email = result.Email,
@@ -58,6 +62,10 @@ namespace UserService.API.GRPC
                 Password = request.Password
             };
             var token = await userService.Login(dto);
+            if (token is null)
+            {
+                throw new RpcException(new Status(StatusCode.Unauthenticated, "Email or password not valid"));
+            }
             return new LoginResponse()
             {
                 Token = token

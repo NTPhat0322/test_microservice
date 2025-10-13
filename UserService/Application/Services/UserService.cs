@@ -19,16 +19,16 @@ namespace UserService.Application.Services
             return await userRepository.GetById(id);
         }
 
-        public async Task<string> Login(LoginRequestDTO request)
+        public async Task<string?> Login(LoginRequestDTO request)
         {
             //check if email exists
             var user = await userRepository.GetByEmail(request.Email);
             if (user is null)
-                throw new KeyNotFoundException("User has not been registered yet");
+                return null;
             //check if password is correct
             var isPasswordValid = PasswordHasher.VerifyPassword(request.Password, user.PasswordHash);
-            if(!isPasswordValid)
-                throw new UnauthorizedAccessException("Password is incorrect");
+            if (!isPasswordValid)
+                return null;
             //generate token
             var token = JwtHelper.CreateToken(user);
             return token;
