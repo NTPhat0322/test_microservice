@@ -26,5 +26,13 @@ namespace UserService.Infrastructure.Repositories
         {
             return await context.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
+
+        public async Task<bool> Update(User user)
+        {
+            context.Users.Update(user);
+            var change = await context.SaveChangesAsync();
+            if(change > 0) return true;
+            return false;
+        }
     }
 }

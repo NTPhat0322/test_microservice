@@ -33,7 +33,8 @@ message CreateUserRequest {
 message CreateUserResponse {
 	string email = 1;
 	string userId = 2;
-	string token = 3;
+	string accessToken = 3;
+	string refreshToken = 4;
 }
 
 message LoginRequest {
@@ -42,5 +43,6 @@ message LoginRequest {
 }
 
 message LoginResponse {
-	string token = 1;
+	string accessToken = 1;
+	string refreshToken = 2;
 }

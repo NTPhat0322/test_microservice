@@ -19,7 +19,7 @@ namespace UserService.Application.Services
             return await userRepository.GetById(id);
         }
 
-        public async Task<string?> Login(LoginRequestDTO request)
+        public async Task<LoginResponseDTO?> Login(LoginRequestDTO request)
         {
             //check if email exists
             var user = await userRepository.GetByEmail(request.Email);
@@ -30,8 +30,17 @@ namespace UserService.Application.Services
             if (!isPasswordValid)
                 return null;
             //generate token
-            var token = JwtHelper.CreateToken(user);
-            return token;
+            var accessToken = JwtHelper.CreateToken(user);
+            var refreshToken = RefreshTokenHelper.GenerateRefreshToken();
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+            var change = await userRepository.Update(user);
+            if(!change)
+                throw new Exception("Updating refresh token failed");
+            return new LoginResponseDTO() { 
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
+            };
         }
 
         public async Task<RegisterUserResponseDTO> RegisterUserAsync(RegisterUserRequestDTO request)
@@ -48,13 +57,18 @@ namespace UserService.Application.Services
                 Email = request.Email,
                 PasswordHash = hasedPassword,
             };
+            var accessToken = JwtHelper.CreateToken(newUser);
+            var refreshToken = RefreshTokenHelper.GenerateRefreshToken();
+            newUser.RefreshToken = refreshToken;
+            newUser.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
             var rs = await userRepository.Add(newUser);
             if (rs)
                 return new RegisterUserResponseDTO()
                 {
                     Email = newUser.Email,
                     UserId = newUser.Id.ToString(),
-                    Token = "coming soon"
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken
                 };
             else
             {
