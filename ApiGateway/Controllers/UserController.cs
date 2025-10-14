@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UserGrpc.Protos;
 
@@ -20,7 +21,7 @@ namespace ApiGateway.Controllers
             var result = await userServiceClient.GetByIdAsync(new UserIdRequest { Id = id });
             return Ok(result);
         }
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequest createUserRequest)
         {
             var result = await userServiceClient.CreateUserAsync(createUserRequest);
@@ -32,5 +33,27 @@ namespace ApiGateway.Controllers
             var result = await userServiceClient.LoginAsync(request);
             return Ok(result);
         }
+
+        [Authorize]
+        [HttpGet("authentication")]
+        public IActionResult Authenticate()
+        {
+            return Ok("Authenticated");
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpGet("admin-only")]
+        public IActionResult AdminOnly()
+        {
+            return Ok("Admin only");
+        }
+
+        [Authorize(Roles = "user")]
+        [HttpGet("user-only")]
+        public IActionResult UserOnly()
+        {
+            return Ok("User only");
+        }
+
     }
 }

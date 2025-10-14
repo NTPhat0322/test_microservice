@@ -41,6 +41,8 @@ public partial class UserServiceDbContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("email");
             entity.Property(e => e.PasswordHash).HasColumnName("password_hash");
+            entity.Property(e => e.RefreshToken).HasMaxLength(255);
+            entity.Property(e => e.RefreshTokenExpiryTime).HasColumnType("timestamp without time zone");
             entity.Property(e => e.Role)
                 .HasMaxLength(50)
                 .HasDefaultValueSql("'user'::character varying")

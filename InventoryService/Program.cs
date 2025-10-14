@@ -19,7 +19,7 @@ builder.Services.AddDbContext<InventoryServiceDbContext>(options => {
 
 //DI
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
-builder.Services.AddScoped<IInventoryService, InventoryService.Application.Services.InventoryService>();
+builder.Services.AddScoped<IInventoryService, InventoryService.Application. Services.InventoryService>();
 
 //mass transit
 builder.Services.AddMassTransit(busConfigurator => { 

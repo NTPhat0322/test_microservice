@@ -1,4 +1,5 @@
 ﻿using ApiGateway.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderGrpc.Protos;
@@ -21,6 +22,7 @@ namespace ApiGateway.Controllers
             var order = await orderServiceClient.GetByIdAsync(new OrderIdRequest { Id = id });
             return Ok(order);
         }
+        
         [HttpPost]
         public async Task<IActionResult> CreateOrderAsync([FromBody] CreateOrderRequest createOrderRequest)
         {

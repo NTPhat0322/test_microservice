@@ -10,9 +10,13 @@
 
 	<ItemGroup>
 	  <Compile Remove="Protos\**" />
+	  <Compile Remove="Shared\EventContracts\**" />
 	  <Content Remove="Protos\**" />
+	  <Content Remove="Shared\EventContracts\**" />
 	  <EmbeddedResource Remove="Protos\**" />
+	  <EmbeddedResource Remove="Shared\EventContracts\**" />
 	  <None Remove="Protos\**" />
+	  <None Remove="Shared\EventContracts\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -35,16 +39,12 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+		<PackageReference Include="TPNuget.Contracts" Version="1.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Folder Include="Domain\Entities\" />
 		<Folder Include="Infrastructure\Data\" />
-		<Folder Include="Shared\EventContracts\" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\Contracts\Contracts.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<Protobuf Include="Shared\Protos\inventory.proto" GrpcServices="Server" ProtoRoot="Shared\Protos" />
