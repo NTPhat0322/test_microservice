@@ -51,7 +51,8 @@ namespace UserService.API.GRPC
             {
                 Email = result.Email,
                 UserId = result.UserId,
-                Token = result.Token
+                AccessToken = result.AccessToken,
+                RefreshToken = result.RefreshToken
             };
         }
         public override async Task<LoginResponse> Login(LoginRequest request, ServerCallContext context)
@@ -61,14 +62,15 @@ namespace UserService.API.GRPC
                 Email = request.Email,
                 Password = request.Password
             };
-            var token = await userService.Login(dto);
-            if (token is null)
+            var loginReponse = await userService.Login(dto);
+            if (loginReponse is null)
             {
-                throw new RpcException(new Status(StatusCode.Unauthenticated, "Email or password not valid"));
+                throw new Exception("Email or password not valid");
             }
             return new LoginResponse()
             {
-                Token = token
+                AccessToken = loginReponse.AccessToken,
+                RefreshToken = loginReponse.RefreshToken
             };
         }
 

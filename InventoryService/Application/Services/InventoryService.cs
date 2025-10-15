@@ -1,34 +1,37 @@
 ﻿using InventoryService.Application.Interfaces;
 using InventoryService.Domain.Entities;
 using InventoryService.Domain.Repositories;
+using System.Runtime.InteropServices;
 
 namespace InventoryService.Application.Services
 {
-    public class InventoryService(IInventoryRepository inventoryRepository) : IInventoryService
+    public class InventoryService(IUnitOfWork unitOfWork) : IInventoryService
     {
         public async Task<bool> AddInventoryAsync(Inventory inventory)
         {
-            return await inventoryRepository.AddInventory(inventory);
+            await unitOfWork.Inventories.AddInventory(inventory);
+            return await unitOfWork.Complete() > 0;
         }
 
         public async Task<List<Inventory>> GetAllInventoriesAsync()
         {
-            return await inventoryRepository.GetAll();
+            return await unitOfWork.Inventories.GetAll();
         }
 
         public async Task<Inventory?> GetInventoryByIdAsync(Guid id)
         {
-            return await inventoryRepository.GetById(id);
+            return await unitOfWork.Inventories.GetById(id);
         }
 
         public async Task<Inventory?> GetInventoryByProductIdAsync(Guid id)
         {
-            return await inventoryRepository.GetByProductId(id);
+            return await unitOfWork.Inventories.GetByProductId(id);
         }
 
         public async Task<bool> UpdateInventory(Inventory inventory)
         {
-            return await inventoryRepository.UpdateInventory(inventory);
+            await unitOfWork.Inventories.UpdateInventory(inventory);
+            return await unitOfWork.Complete() > 0;
         }
     }
 }
