@@ -5,7 +5,7 @@ using Shared.Protos;
 
 namespace OrderService.Application.Services
 {
-    public class OrderService(IOrderRepository orderRepository, ProductService.ProductServiceClient productClient) : IOrderService
+    public class OrderService(ProductService.ProductServiceClient productClient, IUnitOfWork unitOfWork) : IOrderService
     {
         public async Task<bool> CreateOrderAsync(Guid productId, int quantity)
         {
@@ -17,18 +17,22 @@ namespace OrderService.Application.Services
                 Quantity = quantity,
                 TotalPrice = Convert.ToDecimal(product.Price) * quantity
             };
-            await orderRepository.AddOrderAsync(order);
+            //await orderRepository.AddAsync(order);
+            await unitOfWork.Orders.AddAsync(order);
+            await unitOfWork.Complete();
             return true;
         }
 
         public async Task<List<Order>> GetAllOrdersAsync()
         {
-            return await orderRepository.GetAllOrdersAsync();
+            //return await orderRepository.GetAllAsync() as List<Order> ?? new List<Order>();
+            return await unitOfWork.Orders.GetAllAsync() as List<Order> ?? new List<Order>();
         }
 
         public async Task<Order?> GetOrderByIdAsync(Guid id)
         {
-            return await orderRepository.GetOrderByIdAsync(id);
+            //return await orderRepository.GetByIdAsync(id);
+            return await unitOfWork.Orders.GetByIdAsync(id);
         }
     }
 }

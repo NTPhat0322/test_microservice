@@ -3,6 +3,7 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using OrderService.API.GRPC;
 using OrderService.Application.Interfaces;
+using OrderService.Domain.Entities;
 using OrderService.Domain.Repositories;
 using OrderService.Infrastructure.Data;
 using OrderService.Infrastructure.Repositories;
@@ -24,6 +25,9 @@ builder.Services.AddGrpcClient<ProductService.ProductServiceClient>(o =>
 //DI
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderService, OrderService.Application.Services.OrderService>();
+//builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IGenericRepository<Order>, GenericRepository<Order>>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 //DB configuration
 var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
