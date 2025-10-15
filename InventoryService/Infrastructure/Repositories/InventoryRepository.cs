@@ -8,12 +8,9 @@ namespace InventoryService.Infrastructure.Repositories
 {
     public class InventoryRepository(InventoryServiceDbContext context) : IInventoryRepository
     {
-        public async Task<bool> AddInventory(Inventory inventory)
+        public async Task AddInventory(Inventory inventory)
         {
             await context.AddAsync(inventory);
-            int rs = await context.SaveChangesAsync();
-            if(rs > 0) return true;
-            return false;
         }
 
         public async Task<List<Inventory>> GetAll()
@@ -31,12 +28,11 @@ namespace InventoryService.Infrastructure.Repositories
             return await context.Inventories.FirstOrDefaultAsync(i => i.ProductId == id);
         }
 
-        public async Task<bool> UpdateInventory(Inventory inventory)
+        public Task UpdateInventory(Inventory inventory)
         {
             context.Inventories.Update(inventory);
-            int rs = await context.SaveChangesAsync();
-            if(rs > 0) return true;
-            return false;
+            return Task.CompletedTask;
         }
+
     }
 }
