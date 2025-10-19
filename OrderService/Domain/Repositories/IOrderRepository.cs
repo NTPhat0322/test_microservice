@@ -2,10 +2,7 @@
 
 namespace OrderService.Domain.Repositories
 {
-    public interface IOrderRepository
+    public interface IOrderRepository : IGenericRepository<Order>
     {
-        Task AddOrderAsync(Order order);
-        Task<Order?> GetOrderByIdAsync(Guid id);
-        Task<List<Order>> GetAllOrdersAsync();
     }
 }

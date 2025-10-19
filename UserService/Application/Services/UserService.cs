@@ -7,20 +7,25 @@ using UserService.Domain.Repositories;
 
 namespace UserService.Application.Services
 {
-    public class UserService(IUserRepository userRepository) : IUserService
+    public class UserService(IUnitOfWork unitOfWork) : IUserService
     {
         public async Task<List<User>> GetAllUserAsync()
         {
-            return await userRepository.GetAll();
+            //return await userRepository.GetAll();
+            var repo = unitOfWork.Repository<User>();
+            return await repo.GetAllAsync() as List<User> ?? new List<User>();
         }
 
         public async Task<User?> GetUserByIdAsync(Guid id)
         {
-            return await userRepository.GetById(id);
+            return await unitOfWork.Repository<User>().GetByIdAsync(id);
         }
 
         public async Task<LoginResponseDTO?> Login(LoginRequestDTO request)
         {
+            await unitOfWork.BeginTransactionAsync();
+
+            var userRepository = (IUserRepository)unitOfWork.Repository<User>();
             //check if email exists
             var user = await userRepository.GetByEmail(request.Email);
             if (user is null)
@@ -34,9 +39,10 @@ namespace UserService.Application.Services
             var refreshToken = RefreshTokenHelper.GenerateRefreshToken();
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
-            var change = await userRepository.Update(user);
-            if(!change)
-                throw new Exception("Updating refresh token failed");
+            userRepository.Update(user);
+
+            await unitOfWork.CommitAsync();
+
             return new LoginResponseDTO() { 
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
@@ -45,6 +51,8 @@ namespace UserService.Application.Services
 
         public async Task<RegisterUserResponseDTO> RegisterUserAsync(RegisterUserRequestDTO request)
         {
+            await unitOfWork.BeginTransactionAsync();
+            var userRepository = (IUserRepository)unitOfWork.Repository<User>();    
             //check if email already exists
             var existingUser = await userRepository.GetByEmail(request.Email);
             if (existingUser != null)
@@ -61,7 +69,8 @@ namespace UserService.Application.Services
             var refreshToken = RefreshTokenHelper.GenerateRefreshToken();
             newUser.RefreshToken = refreshToken;
             newUser.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
-            var rs = await userRepository.Add(newUser);
+            await userRepository.AddAsync(newUser);
+            var rs = await unitOfWork.CommitAsync() > 0;
             if (rs)
                 return new RegisterUserResponseDTO()
                 {

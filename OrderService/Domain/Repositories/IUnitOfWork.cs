@@ -2,9 +2,13 @@
 
 namespace OrderService.Domain.Repositories
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
-        public IGenericRepository<Order> Orders { get; }
-        Task<int> Complete();
+        //public IGenericRepository<Order> Orders { get; }
+        public IOrderRepository Orders { get; }
+        Task BeginTransactionAsync();
+        Task<int> CommitAsync();
+        //Task RollbackAsync();
+        //Task<int> SaveChangesAsync();
     }
 }

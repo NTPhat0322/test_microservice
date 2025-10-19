@@ -2,12 +2,8 @@
 
 namespace UserService.Domain.Repositories
 {
-    public interface IUserRepository
+    public interface IUserRepository : IGenericRepository<User>
     {
-        Task<List<User>> GetAll();
-        Task<User?> GetById(Guid id);
         Task<User?> GetByEmail(string email);
-        Task<bool> Add(User user);
-        Task<bool> Update(User user);
     }
 }

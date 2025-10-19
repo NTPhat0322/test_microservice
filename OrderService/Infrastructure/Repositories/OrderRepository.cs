@@ -5,19 +5,10 @@ using OrderService.Infrastructure.Data;
 
 namespace OrderService.Infrastructure.Repositories
 {
-    public class OrderRepository(OrderServiceDbContext dbContext) : IOrderRepository
+    public class OrderRepository : GenericRepository<Order> , IOrderRepository
     {
-        public async Task AddOrderAsync(Order order)
+        public OrderRepository(OrderServiceDbContext context) : base(context.Orders)
         {
-            await dbContext.Orders.AddAsync(order);
-            await dbContext.SaveChangesAsync();
-        }
-
-        public async Task<List<Order>> GetAllOrdersAsync() => await dbContext.Orders.ToListAsync();
-
-        public async Task<Order?> GetOrderByIdAsync(Guid id)
-        {
-            return await dbContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
         }
     }
 }

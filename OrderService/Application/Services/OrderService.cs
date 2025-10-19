@@ -18,8 +18,11 @@ namespace OrderService.Application.Services
                 TotalPrice = Convert.ToDecimal(product.Price) * quantity
             };
             //await orderRepository.AddAsync(order);
+
+            await unitOfWork.BeginTransactionAsync();
             await unitOfWork.Orders.AddAsync(order);
-            await unitOfWork.Complete();
+            await unitOfWork.CommitAsync();
+            
             return true;
         }
 

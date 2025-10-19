@@ -23,10 +23,10 @@ builder.Services.AddGrpcClient<ProductService.ProductServiceClient>(o =>
 });
 
 //DI
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderService, OrderService.Application.Services.OrderService>();
-//builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddScoped<IGenericRepository<Order>, GenericRepository<Order>>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+//builder.Services.AddScoped<IGenericRepository<Order>, GenericRepository<Order>>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 //DB configuration

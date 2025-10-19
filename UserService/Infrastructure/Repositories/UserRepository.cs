@@ -5,34 +5,11 @@ using UserService.Infrastructure.Data;
 
 namespace UserService.Infrastructure.Repositories
 {
-    public class UserRepository(UserServiceDbContext context) : IUserRepository
-    {
-        public async Task<bool> Add(User user)
-        {
-            await context.Users.AddAsync(user);
-            int change = await context.SaveChangesAsync();
-            if(change > 0) return true;
-            return false;
-        }
-
-        public async Task<List<User>> GetAll() => await context.Users.ToListAsync();
-
+    public class UserRepository(UserServiceDbContext context) : GenericRepository<User>(context.Users), IUserRepository
+    {  
         public async Task<User?> GetByEmail(string email)
         {
             return await context.Users.FirstOrDefaultAsync(u => u.Email == email);
-        }
-
-        public async Task<User?> GetById(Guid id)
-        {
-            return await context.Users.FirstOrDefaultAsync(u => u.Id == id);
-        }
-
-        public async Task<bool> Update(User user)
-        {
-            context.Users.Update(user);
-            var change = await context.SaveChangesAsync();
-            if(change > 0) return true;
-            return false;
         }
     }
 }
